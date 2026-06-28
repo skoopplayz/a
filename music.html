@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <style>
       * {
         box-sizing: border-box;
@@ -137,112 +137,14 @@
 
       .main-container {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         width: 100%;
-        max-width: 1100px;
+        max-width: 720px;
         gap: 20px;
       }
 
-      .favorites-column {
-        width: 35%;
-        background: var(--bg-frame, #ffffff);
-        border-radius: 16px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        border: 1px solid var(--menu-border, #DADCE0);
-        max-height: 480px;
-        overflow-y: auto;
-      }
-
-      .favorites-column::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .favorites-column::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      .favorites-column::-webkit-scrollbar-thumb {
-        background: var(--menu-border, #DADCE0);
-        border-radius: 3px;
-      }
-
-      .favorites-title {
-        font-size: 16px;
-        font-weight: 600;
-        margin-bottom: 5px;
-        text-align: center;
-        color: var(--menu-btn-text, #3c4043);
-      }
-
-      .favorite-item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 8px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-
-      .favorite-item:hover {
-        background: var(--menu-btn-bg, #EFEFEF);
-      }
-
-      .favorite-item .result-img {
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-      }
-
-      .favorite-item .result-info {
-        flex: 1;
-      }
-
-      .favorite-item .result-title {
-        font-size: 12px;
-      }
-
-      .favorite-item .result-artist {
-        font-size: 10px;
-      }
-
-      .favorite-item .remove-fav {
-        font-size: 12px;
-        opacity: 0.6;
-        margin-left: 10px;
-        color: var(--menu-btn-text, #3c4043);
-      }
-
-      .favorite-item .remove-fav:hover {
-        opacity: 1;
-      }
-
-      .play-favorites-btn {
-        padding: 10px;
-        font-size: 14px;
-        font-weight: 500;
-        background: var(--menu-btn-bg, #EFEFEF);
-        border-radius: 25px;
-        color: var(--menu-btn-text, #3c4043);
-        border: 1px solid var(--menu-border, transparent);
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
-
-      .play-favorites-btn:hover {
-        background: var(--menu-btn-hover, #e5e5e5);
-      }
-
       .player {
-        width: 65%;
+        width: 100%;
         display: flex;
         align-items: center;
         gap: 24px;
@@ -287,23 +189,6 @@
         position: relative;
       }
 
-      .top-icons {
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-
-      .top-icons i {
-        font-size: 18px;
-        opacity: 0.6;
-        color: var(--menu-btn-text, #3c4043);
-        cursor: pointer;
-      }
-
-      .top-icons i:hover {
-        opacity: 1;
-      }
-
       .track-title {
         font-size: 26px;
         font-weight: 700;
@@ -340,7 +225,7 @@
       }
 
       .controls i {
-        font-size: 16px;
+        font-size: 18px;
         cursor: pointer;
         transition: all 0.2s ease;
         opacity: 0.9;
@@ -403,64 +288,6 @@
         color: var(--menu-btn-text, #3c4043);
       }
 
-      .lyrics-toggle {
-        position: fixed;
-        bottom: 25px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 44px;
-        height: 44px;
-        background: var(--menu-btn-bg, #EFEFEF);
-        border: 1px solid var(--menu-border, #DADCE0);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        transition: all 0.2s ease;
-        z-index: 100;
-      }
-
-      .lyrics-toggle:hover {
-        background: var(--menu-btn-hover, #e5e5e5);
-      }
-
-      .lyrics-toggle i {
-        font-size: 16px;
-        color: var(--menu-btn-text, #3c4043);
-      }
-
-      .lyrics-info {
-        flex: 1;
-        display: none;
-        flex-direction: column;
-        justify-content: flex-start;
-      }
-
-      .lyrics-content {
-        max-height: 220px;
-        overflow-y: auto;
-        text-align: left;
-        white-space: pre-line;
-        padding-right: 10px;
-        font-size: 14px;
-        line-height: 1.6;
-        color: var(--menu-btn-text, #3c4043);
-      }
-
-      .lyric-line {
-        transition: all 0.2s ease;
-        color: var(--menu-btn-text, #3c4043);
-        opacity: 0.4;
-        padding: 3px 0;
-      }
-
-      .lyric-line.active {
-        opacity: 1;
-        font-weight: bold;
-      }
-
       .error-message {
         color: #ff4d4d;
         text-align: center;
@@ -472,7 +299,7 @@
         .main-container {
           flex-direction: column;
         }
-        .player, .favorites-column {
+        .player {
           width: 100%;
         }
       }
@@ -488,27 +315,23 @@
     <div class="main-container">
       <div class="player">
         <div class="album-art">
-          <i class="fa-solid fa-music" id="musicIcon"></i>
+          <i class="ri-music-2-line" id="musicIcon"></i>
           <img src="" alt="Album" id="albumCover" crossorigin="anonymous" style="display: none" />
         </div>
         <div class="info" id="playerInfo">
-          <div class="top-icons">
-            <i id="favoritesBtn" class="fa-solid fa-star"></i>
-          </div>
           <div class="track-title" id="trackTitle">Not Playing</div>
           <div class="artist" id="artistName"></div>
           <div class="controls">
             <div class="control-row">
-              <i id="backward10" class="fas fa-backward control-btn"></i>
-              <i id="backward5" class="fa-solid fa-chevron-left control-btn"></i>
-              <i id="playPause" class="fa-solid fa-play control-btn"></i>
-              <i id="forward5" class="fa-solid fa-chevron-right control-btn"></i>
-              <i id="forward10" class="fas fa-forward control-btn"></i>
+              <i id="backward10" class="ri-speed-mini-line control-btn"></i>
+              <i id="backward5" class="ri-arrow-left-s-line control-btn"></i>
+              <i id="playPause" class="ri-play-fill control-btn"></i>
+              <i id="forward5" class="ri-arrow-right-s-line control-btn"></i>
+              <i id="forward10" class="ri-speed-up-line control-btn"></i>
             </div>
             <div class="control-row">
-              <i id="loopToggle" class="fa-solid fa-repeat control-btn"></i>
-              <i id="volumeBtn" class="fa-solid fa-volume-high control-btn"></i>
-              <i id="favoriteBtn" class="fa-regular fa-heart control-btn"></i>
+              <i id="loopToggle" class="ri-repeat-line control-btn"></i>
+              <i id="volumeBtn" class="ri-volume-up-line control-btn"></i>
             </div>
           </div>
           <div id="seekbar" class="seekbar">
@@ -519,19 +342,7 @@
             <span id="remainingTime">-0:00</span>
           </div>
         </div>
-        <div class="lyrics-info" id="lyricsInfo">
-          <div class="lyrics-content" id="lyricsContent"></div>
-        </div>
       </div>
-
-      <div class="favorites-column" id="favoritesColumn">
-        <div class="favorites-title">Favorites</div>
-        <div class="play-favorites-btn" id="playFavoritesBtn"><i class="fas fa-play"></i> Play Favorites</div>
-      </div>
-    </div>
-
-    <div class="lyrics-toggle" id="lyricsToggle">
-      <i class="fa-solid fa-align-left"></i>
     </div>
 
     <div id="player-container">
@@ -539,7 +350,6 @@
     </div>
 
     <script>
-      // Active design theme profile engine setup 
       function applyLocalTheme() {
         const themeColors = {
           light:    ['#f7f7f7', '#ffffff'],
@@ -575,15 +385,8 @@
       const progressBar = document.querySelector('#progress');
       const currentTimeSpan = document.querySelector('#currentTime');
       const remainingTimeSpan = document.querySelector('#remainingTime');
-      const lyricsToggle = document.querySelector('#lyricsToggle');
       const playerInfo = document.querySelector('#playerInfo');
-      const lyricsInfo = document.querySelector('#lyricsInfo');
-      const lyricsContent = document.querySelector('#lyricsContent');
-      const favoriteBtn = document.querySelector('#favoriteBtn');
-      const favoritesBtn = document.querySelector('#favoritesBtn');
-      const favoritesColumn = document.querySelector('#favoritesColumn');
-      const playFavoritesBtn = document.querySelector('#playFavoritesBtn');
-      let showingLyrics = false;
+      
       let isMuted = false;
       let player = null;
       let isPlaying = false;
@@ -591,12 +394,8 @@
       let searchTimeout;
       let playerReady = false;
       let currentTrack = { title: 'Not Playing', artist: '', artwork: '', genre: '' };
-      let isFavorite = false;
-      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      let currentFavoriteIndex = -1;
       let isLooping = false;
 
-      // Rest of your logic remains completely preserved...
       async function loadYouTubeAPI(retries = 3, delay = 2000) {
         return new Promise((resolve, reject) => {
           if (window.YT && window.YT.Player) { resolve(); return; }
@@ -632,15 +431,13 @@
               onStateChange: (event) => {
                 if (event.data === window.YT.PlayerState.PLAYING) {
                   isPlaying = true;
-                  playPauseBtn.className = 'fa-solid fa-pause control-btn';
+                  playPauseBtn.className = 'ri-pause-fill control-btn';
                 } else if (event.data === window.YT.PlayerState.PAUSED || event.data === window.YT.PlayerState.ENDED) {
                   isPlaying = false;
-                  playPauseBtn.className = 'fa-solid fa-play control-btn';
+                  playPauseBtn.className = 'ri-play-fill control-btn';
                 }
                 if (event.data === window.YT.PlayerState.ENDED && isLooping) {
                   player.seekTo(0); player.playVideo();
-                } else if (event.data === window.YT.PlayerState.ENDED && currentFavoriteIndex >= 0 && currentFavoriteIndex < favorites.length - 1) {
-                  playNextFavorite();
                 }
               },
               onError: () => { searchResults.innerHTML = '<div class="error-message">Failed to load video.</div>'; }
@@ -657,9 +454,9 @@
       function toggleMute() {
         if (!player || !playerReady) return;
         if (isMuted) {
-          player.unMute(); volumeBtn.className = 'fa-solid fa-volume-high control-btn'; isMuted = false;
+          player.unMute(); volumeBtn.className = 'ri-volume-up-line control-btn'; isMuted = false;
         } else {
-          player.mute(); volumeBtn.className = 'fa-solid fa-volume-xmark control-btn'; isMuted = true;
+          player.mute(); volumeBtn.className = 'ri-volume-mute-line control-btn'; isMuted = true;
         }
       }
 
@@ -691,7 +488,7 @@
           resultElement.innerHTML = `<div class="result-img"><img src="${item.artworkUrl100}" crossorigin="anonymous"></div><div class="result-info"><div class="result-title">${item.trackName}</div><div class="result-artist">${item.artistName}</div></div>`;
           resultElement.addEventListener('click', () => {
             playSong(item.trackName, item.artistName, item.artworkUrl100, item.primaryGenreName);
-            hideSearchResults(); searchInput.value = ''; currentFavoriteIndex = -1;
+            hideSearchResults(); searchInput.value = '';
           });
           searchResults.appendChild(resultElement);
         });
@@ -704,12 +501,9 @@
         trackTitle.textContent = title; artistName.textContent = artist;
         albumCover.src = artwork.replace('100x100', '600x600');
         albumCover.style.display = 'block'; musicIcon.style.display = 'none';
-        if (showingLyrics) { fetchLyrics(artist, title); }
         currentTrack = { title, artist, artwork, genre };
         localStorage.setItem('lastPlayed', JSON.stringify(currentTrack));
-        isFavorite = favorites.some((fav) => fav.title === title && fav.artist === artist);
-        favoriteBtn.className = isFavorite ? 'fa-solid fa-heart control-btn' : 'fa-regular fa-heart control-btn';
-        isPlaying = false; playPauseBtn.className = 'fa-solid fa-play control-btn';
+        isPlaying = false; playPauseBtn.className = 'ri-play-fill control-btn';
         getYT(`${title} ${artist}`);
       }
 
@@ -726,31 +520,6 @@
         } else {
           initPlayer().then(() => { if (player && playerReady) player.loadVideoById(videoId); });
         }
-      }
-
-      lyricsToggle.addEventListener('click', function () {
-        showingLyrics = !showingLyrics;
-        if (showingLyrics) {
-          playerInfo.style.display = 'none'; albumCover.style.display = 'none'; lyricsInfo.style.display = 'flex';
-          fetchLyrics(currentTrack.artist, currentTrack.title);
-        } else {
-          playerInfo.style.display = 'flex'; albumCover.style.display = currentTrack.title === 'Not Playing' ? 'none' : 'block'; lyricsInfo.style.display = 'none';
-        }
-      });
-
-      async function fetchLyrics(artist, title) {
-        lyricsContent.textContent = 'Loading lyrics...';
-        try {
-          const response = await fetch(`https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(title)}`);
-          const data = await response.json();
-          if (data.syncedLyrics) {
-            const lines = data.syncedLyrics.split('\n').map(l => {
-              const m = l.match(/^\[(\d+):(\d+\.\d+)](.*)$/);
-              return m ? { time: parseInt(m[1])*60 + parseFloat(m[2]), text: m[3].trim() } : null;
-            }).filter(Boolean);
-            lyricsContent.innerHTML = lines.map((l, i) => `<div class="lyric-line" id="lyric-${i}">${l.text}</div>`).join('');
-          } else { lyricsContent.innerHTML = data.lyrics ? data.lyrics.replace(/\n/g, '<br>') : 'Lyrics missing.'; }
-        } catch { lyricsContent.textContent = 'Lyrics un-available.'; }
       }
 
       function updateProgress() {
@@ -784,7 +553,6 @@
         if (player && playerReady) { player.seekTo(pct * player.getDuration(), true); }
       }
 
-      // Initialize player runtime setup
       window.addEventListener('DOMContentLoaded', () => {
         initPlayer();
         document.querySelector('#backward10')?.addEventListener('click', () => player.seekTo(player.getCurrentTime() - 10));
@@ -794,7 +562,7 @@
         
         document.querySelector('#loopToggle').addEventListener('click', () => {
           isLooping = !isLooping;
-          document.querySelector('#loopToggle').className = isLooping ? 'fa-solid fa-repeat-1 control-btn' : 'fa-solid fa-repeat control-btn';
+          document.querySelector('#loopToggle').className = isLooping ? 'ri-repeat-one-line control-btn' : 'ri-repeat-line control-btn';
         });
       });
     </script>
