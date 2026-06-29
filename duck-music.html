@@ -16,7 +16,7 @@
       }
 
       body {
-        min-height: 100vh;
+        height: 100vh;
         background-color: var(--bg-frame, #ffffff);
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         color: var(--menu-btn-text, #3c4043);
@@ -44,6 +44,7 @@
         display: flex;
         flex-direction: column;
         gap: 24px;
+        flex-shrink: 0;
       }
 
       .nav-section h3 {
@@ -75,10 +76,10 @@
       .main-view {
         flex: 1;
         padding: 24px 32px;
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
         gap: 24px;
+        overflow: hidden; /* Lock view container to prevent full page blowout */
       }
 
       /* Search Header Frame */
@@ -86,6 +87,7 @@
         position: relative;
         width: 100%;
         max-width: 480px;
+        flex-shrink: 0;
       }
 
       .search-container {
@@ -200,13 +202,32 @@
         font-size: 22px;
         font-weight: 700;
         letter-spacing: -0.5px;
+        flex-shrink: 0;
       }
 
-      /* Track Layout Container */
+      /* Track Layout Container with custom independent scroll adjustments */
       .track-list {
         display: flex;
         flex-direction: column;
         gap: 4px;
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+
+      /* Custom Scroller Aesthetics */
+      .track-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .track-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .track-list::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+      .track-list::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.2);
       }
 
       .track-row {
@@ -265,6 +286,7 @@
         padding: 0 24px;
         position: relative;
         z-index: 110;
+        flex-shrink: 0; /* Never let the footbar shrink or get squeezed */
       }
 
       .player-identity {
@@ -579,7 +601,7 @@
       let playerReady = false;
       let isLooping = false;
       
-      let currentView = 'deck'; // 'deck' or 'liked'
+      let currentView = 'deck';
       let trendingTracks = [];
       let likedTracks = JSON.parse(localStorage.getItem('likedTracks')) || [];
 
@@ -623,8 +645,7 @@
                 if (event.data === window.YT.PlayerState.ENDED && isLooping) {
                   player.seekTo(0); player.playVideo();
                 }
-              },
-              onError: () => { console.error('Error loading current item video lookup.'); }
+              }
             }
           });
         } catch (error) { console.error(error); }
@@ -644,24 +665,21 @@
         }
       }
 
-      // Fetch Trending Chart data for the Player Deck view from Apple Music API feeds
       async function fetchTrendingFeed() {
         try {
-          const response = await fetch(`https://itunes.apple.com/rss/topsongs/limit=15/json`);
+          const response = await fetch(`https://itunes.apple.com/rss/topsongs/limit=25/json`);
           const data = await response.json();
           const entries = data.feed.entry || [];
           
           trendingTracks = entries.map(entry => ({
             trackName: entry['im:name'].label,
             artistName: entry['im:artist'].label,
-            artworkUrl100: entry['im:image'][2].label, // highest res item from rss feed
+            artworkUrl100: entry['im:image'][2].label,
             id: entry.id.attributes['im:id']
           }));
           
           if(currentView === 'deck') renderTracks(trendingTracks);
         } catch (e) {
-          console.error("Chart hotlist failed to load. Using standard fallback lists.", e);
-          // Standard structural fallback context
           trendingTracks = [
             { trackName: "Blinding Lights", artistName: "The Weeknd", artworkUrl100: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=100&h=100&fit=crop" },
             { trackName: "Stay", artistName: "The Kid LAROI & Justin Bieber", artworkUrl100: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=100&h=100&fit=crop" },
@@ -701,13 +719,11 @@
             </div>
           `;
           
-          // Trigger player on wrapper click (excluding target interactive heart button container)
           row.addEventListener('click', (e) => {
             if (e.target.closest('.like-btn-container') || e.target.classList.contains('ri-heart-line') || e.target.classList.contains('ri-heart-fill')) return;
             playSong(item.trackName, item.artistName, item.artworkUrl100);
           });
 
-          // Toggling absolute state mapping of favorites collection logic
           row.querySelector('.like-btn-container i').addEventListener('click', (e) => {
             e.stopPropagation();
             toggleLikeTrack(item, e.target);
@@ -723,7 +739,7 @@
           likedTracks.splice(index, 1);
           heartElement.className = 'ri-heart-line';
           if(currentView === 'liked') {
-            renderTracks(likedTracks); // Re-render instantly if inside liked template frame view
+            renderTracks(likedTracks);
           }
         } else {
           likedTracks.push(track);
@@ -825,7 +841,6 @@
         if (player && playerReady) { player.seekTo(pct * player.getDuration(), true); }
       }
 
-      // View Switching Event Listeners Configuration
       deckNav.addEventListener('click', () => {
         currentView = 'deck';
         deckNav.classList.add('active');
