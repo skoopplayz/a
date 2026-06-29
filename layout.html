@@ -26,16 +26,16 @@
         transition: background-color 0.3s ease, color 0.3s ease;
       }
 
-      /* Spotify Grid Wrapper Layout */
+      /* Spotify-like Main Wrapper Grid */
       .app-layout {
         display: flex;
         flex: 1;
-        height: calc(100vh - 90px);
+        height: calc(100vh - 90px); /* Leave room for persistent player bar */
         width: 100%;
         overflow: hidden;
       }
 
-      /* Navigation Side Panel Elements */
+      /* Navigation Side Panel */
       .sidebar {
         width: 230px;
         background: rgba(0, 0, 0, 0.02);
@@ -44,11 +44,6 @@
         display: flex;
         flex-direction: column;
         gap: 24px;
-        flex-shrink: 0;
-      }
-
-      body.dark-mode .sidebar {
-        background: rgba(255, 255, 255, 0.02);
       }
 
       .nav-section h3 {
@@ -69,21 +64,14 @@
         font-weight: 500;
         border-radius: 8px;
         cursor: pointer;
-        transition: all 0.2s;
-        color: inherit;
-        text-decoration: none;
+        transition: background 0.2s;
       }
 
-      .nav-link:hover {
+      .nav-link:hover, .nav-link.active {
         background: var(--menu-btn-bg, #EFEFEF);
       }
 
-      .nav-link.active {
-        background: var(--menu-btn-text, #3c4043);
-        color: var(--bg-frame, #ffffff);
-      }
-
-      /* Main Scrollable Workspace Panel Viewports */
+      /* Main Dynamic Content Container */
       .main-view {
         flex: 1;
         padding: 24px 32px;
@@ -93,23 +81,11 @@
         gap: 24px;
       }
 
-      /* Navigation App Tab System Views */
-      .view-panel {
-        display: none;
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .view-panel.active-view {
-        display: flex;
-      }
-
-      /* Search UI Overlay Configurations */
+      /* Search Header Frame */
       .search-wrapper {
         position: relative;
         width: 100%;
         max-width: 480px;
-        flex-shrink: 0;
       }
 
       .search-container {
@@ -136,6 +112,11 @@
         background: transparent;
         color: var(--menu-btn-text, #3c4043);
         outline: none;
+      }
+
+      .search-input::placeholder {
+        color: var(--menu-btn-text, #70757a);
+        opacity: 0.6;
       }
 
       .search-results {
@@ -214,24 +195,24 @@
         text-overflow: ellipsis;
       }
 
+      /* Catalog Content Section Views */
       .view-header {
         font-size: 22px;
         font-weight: 700;
         letter-spacing: -0.5px;
-        margin-bottom: 4px;
       }
 
-      /* Track Rows Tables UI Layout */
+      /* Track Layout Container */
       .track-list {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
       }
 
       .track-row {
         display: flex;
         align-items: center;
-        padding: 10px 16px;
+        padding: 8px 16px;
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.2s;
@@ -242,36 +223,9 @@
       }
 
       .track-row .track-index {
-        width: 35px;
+        width: 30px;
         font-size: 14px;
         opacity: 0.5;
-      }
-
-      /* Dynamic Playlist Grid Utilities */
-      .playlist-actions-bar {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 10px;
-      }
-
-      .btn-utility {
-        padding: 10px 16px;
-        font-size: 13px;
-        font-weight: 600;
-        border: 1px solid var(--menu-border, #DADCE0);
-        background: var(--bg-frame, #ffffff);
-        color: var(--menu-btn-text, #3c4043);
-        border-radius: 20px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-family: inherit;
-        transition: all 0.2s;
-      }
-
-      .btn-utility:hover {
-        background: var(--menu-btn-bg, #EFEFEF);
       }
 
       /* Persistent Sticky Bottom Control Hub */
@@ -286,7 +240,6 @@
         padding: 0 24px;
         position: relative;
         z-index: 110;
-        flex-shrink: 0;
       }
 
       .player-identity {
@@ -294,7 +247,7 @@
         align-items: center;
         gap: 14px;
         width: 30%;
-        min-width: 200px;
+        min-width: 180px;
       }
 
       .album-art {
@@ -324,7 +277,6 @@
 
       .track-metadata {
         min-width: 0;
-        flex: 1;
       }
 
       .track-title {
@@ -393,7 +345,7 @@
         color: var(--menu-btn-text, #3c4043);
       }
 
-      .control-buttons i.active-state {
+      .control-buttons i.active-loop {
         color: #2563eb;
         opacity: 1;
       }
@@ -437,7 +389,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 16px;
+        gap: 12px;
         width: 30%;
       }
 
@@ -445,15 +397,9 @@
         font-size: 18px;
         cursor: pointer;
         opacity: 0.7;
-        transition: color 0.2s;
       }
 
       .player-utilities i:hover {
-        opacity: 1;
-      }
-
-      .player-utilities i.liked {
-        color: #ef4444;
         opacity: 1;
       }
 
@@ -478,7 +424,7 @@
           width: 50%;
         }
         .player-utilities {
-          gap: 10px;
+          display: none;
         }
       }
     </style>
@@ -489,13 +435,13 @@
       <aside class="sidebar">
         <div class="nav-section">
           <h3>Discover</h3>
-          <div class="nav-link active" data-tab="home"><i class="ri-home-5-line"></i> Home</div>
-          <div class="nav-link" data-tab="discovery" id="tabDiscovery"><i class="ri-compass-3-line"></i> Discovery Feed</div>
+          <div class="nav-link active"><i class="ri-music-2-line"></i> Player Deck</div>
+          <div class="nav-link"><i class="ri-radar-line"></i> Live Feed</div>
         </div>
         <div class="nav-section">
           <h3>Collection</h3>
-          <div class="nav-link" data-tab="playlist"><i class="ri-play-list-music-line"></i> Playlist Storage</div>
-          <div class="nav-link" data-tab="liked"><i class="ri-heart-line"></i> Liked Tracks</div>
+          <div class="nav-link"><i class="ri-heart-line"></i> Liked Tracks</div>
+          <div class="nav-link"><i class="ri-history-line"></i> Recent Searches</div>
         </div>
       </aside>
 
@@ -508,53 +454,14 @@
           <div class="search-results" id="searchResults"></div>
         </div>
 
-        <div class="view-panel active-view" id="panel-home">
-          <h2 class="view-header">Recent Search Queue</h2>
-          <div class="track-list" id="list-home">
-            <div class="track-row" style="cursor: default; opacity: 0.5;">
-              <div class="track-index">-</div>
-              <div class="result-info">
-                <div class="result-title">Search history queue is empty</div>
-                <div class="result-artist">Type in the top bar to fetch global songs live.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="view-panel" id="panel-discovery">
-          <h2 class="view-header">Global Trends Discovery</h2>
-          <div class="track-list" id="list-discovery">
-            <div class="loading" style="padding: 20px 0;">Assembling fresh trending soundscapes...</div>
-          </div>
-        </div>
-
-        <div class="view-panel" id="panel-playlist">
-          <h2 class="view-header">Your Custom Playlist</h2>
-          <div class="playlist-actions-bar">
-            <button class="btn-utility" id="btnAddToPlaylist">
-              <i class="ri-add-circle-line"></i> Add Current Track to Playlist
-            </button>
-          </div>
-          <div class="track-list" id="list-playlist">
-            <div class="track-row" style="cursor: default; opacity: 0.5;">
-              <div class="track-index">-</div>
-              <div class="result-info">
-                <div class="result-title">No tracks saved in your playlist stack yet</div>
-                <div class="result-artist">Play a track and hit the button above to store it.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="view-panel" id="panel-liked">
-          <h2 class="view-header">Your Liked Anthems</h2>
-          <div class="track-list" id="list-liked">
-            <div class="track-row" style="cursor: default; opacity: 0.5;">
-              <div class="track-index">-</div>
-              <div class="result-info">
-                <div class="result-title">No liked tracks registered</div>
-                <div class="result-artist">Click the heart utility icon in the media bar to tag favorites.</div>
-              </div>
+        <h2 class="view-header" id="viewHeader">Search History Queue</h2>
+        
+        <div class="track-list" id="trackQueueList">
+          <div class="track-row" style="cursor: default; opacity: 0.6;">
+            <div class="track-index">-</div>
+            <div class="result-info">
+              <div class="result-title">Your dynamic search query queue is empty</div>
+              <div class="result-artist">Use the input bar above to fetch songs on-demand</div>
             </div>
           </div>
         </div>
@@ -569,7 +476,7 @@
         </div>
         <div class="track-metadata">
           <div class="track-title" id="trackTitle">Not Playing</div>
-          <div class="artist" id="artistName">Select an audio track</div>
+          <div class="artist" id="artistName">Choose an audio track</div>
         </div>
       </div>
 
@@ -592,7 +499,6 @@
       </div>
 
       <div class="player-utilities">
-        <i id="likeActionBtn" class="ri-heart-line" title="Like Track"></i>
         <i id="loopToggle" class="ri-repeat-line" title="Toggle Repeat Mode"></i>
         <i id="volumeBtn" class="ri-volume-up-line" title="Mute Toggle"></i>
       </div>
@@ -624,10 +530,10 @@
 
       const YT_KEY = 'AIzaSyBQpYqy6P7hBtUCoTPJCEVjZKx5BzB-ItU';
       const SEARCH_EP = 'https://itunes.apple.com/search?term=';
-      
-      // DOM Selectors Node Tree
       const searchInput = document.querySelector('#searchInput');
       const searchResults = document.querySelector('#searchResults');
+      const trackQueueList = document.querySelector('#trackQueueList');
+      const viewHeader = document.querySelector('#viewHeader');
       
       const trackTitle = document.querySelector('#trackTitle');
       const artistName = document.querySelector('#artistName');
@@ -639,10 +545,7 @@
       const progressBar = document.querySelector('#progress');
       const currentTimeSpan = document.querySelector('#currentTime');
       const remainingTimeSpan = document.querySelector('#remainingTime');
-      const likeActionBtn = document.querySelector('#likeActionBtn');
-      const btnAddToPlaylist = document.querySelector('#btnAddToPlaylist');
-
-      // Global Memory Collections Engine States
+      
       let isMuted = false;
       let player = null;
       let isPlaying = false;
@@ -650,12 +553,7 @@
       let searchTimeout;
       let playerReady = false;
       let isLooping = false;
-      
-      // Storage Arrays
-      let currentPlayingTrack = null;
-      let historyQueue = [];
-      let playlistTracks = JSON.parse(localStorage.getItem('pond-playlist-tracks')) || [];
-      let likedTracks = JSON.parse(localStorage.getItem('pond-liked-tracks')) || [];
+      let queueTracks = [];
 
       async function loadYouTubeAPI(retries = 3, delay = 2000) {
         return new Promise((resolve, reject) => {
@@ -721,21 +619,6 @@
         }
       }
 
-      // Live Tab Controller System Switching Logic
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-          document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-view'));
-          
-          link.classList.add('active');
-          const destinationTab = link.getAttribute('data-tab');
-          document.getElementById(`panel-${destinationTab}`).classList.add('active-view');
-          
-          if(destinationTab === 'discovery') loadDiscoveryTrendsFeed();
-        });
-      });
-
-      // Unified Dynamic Search Engine Input Pipelines
       searchInput.addEventListener('input', function () {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
@@ -745,13 +628,13 @@
       });
 
       async function searchSongs(query) {
-        searchResults.innerHTML = '<div class="loading">Searching catalogs...</div>';
+        searchResults.innerHTML = '<div class="loading">Searching global tracks...</div>';
         showSearchResults();
         try {
           const response = await fetch(`${SEARCH_EP}${encodeURIComponent(query)}&media=music&limit=10`);
           const data = await response.json();
           displaySearchResults(data.results);
-        } catch (error) { searchResults.innerHTML = '<div class="error-message">Search failed.</div>'; }
+        } catch (error) { searchResults.innerHTML = '<div class="error-message">Search connection down.</div>'; }
       }
 
       function displaySearchResults(results) {
@@ -763,61 +646,28 @@
           resultElement.className = 'result-item';
           resultElement.innerHTML = `<div class="result-img"><img src="${item.artworkUrl100}" crossorigin="anonymous"></div><div class="result-info"><div class="result-title">${item.trackName}</div><div class="result-artist">${item.artistName}</div></div>`;
           resultElement.addEventListener('click', () => {
-            pushTrackToHistory(item);
-            playSong(item);
+            // Append target track straight into history queue array listing
+            addToQueue(item);
+            playSong(item.trackName, item.artistName, item.artworkUrl100);
             hideSearchResults(); searchInput.value = '';
           });
           searchResults.appendChild(resultElement);
         });
       }
 
-      function showSearchResults() { searchResults.classList.add('active'); }
-      function hideSearchResults() { searchResults.classList.remove('active'); }
-
-      // History Management View Port Functions
-      function pushTrackToHistory(track) {
-        historyQueue = historyQueue.filter(t => !(t.trackName === track.trackName && t.artistName === track.artistName));
-        historyQueue.unshift(track);
-        renderTracksTable(historyQueue, 'list-home');
+      function addToQueue(track) {
+        // Filter duplicate items in timeline trace array list
+        queueTracks = queueTracks.filter(t => !(t.trackName === track.trackName && t.artistName === track.artistName));
+        queueTracks.unshift(track);
+        renderQueueFeed();
       }
 
-      // Auto-Populating Discovery Tab Feed Engine
-      async function loadDiscoveryTrendsFeed() {
-        const targetContainer = document.getElementById('list-discovery');
-        targetContainer.innerHTML = '<div class="loading" style="padding:20px 0;">Assembling trending soundscapes...</div>';
+      function renderQueueFeed() {
+        if (queueTracks.length === 0) return;
+        viewHeader.textContent = "Your Live Search Feed";
+        trackQueueList.innerHTML = '';
         
-        const terms = ['lofi', 'synthwave', 'chill', 'pop', 'indie', 'acoustic'];
-        const randomTerm = terms[Math.floor(Math.random() * terms.length)];
-        
-        try {
-          const response = await fetch(`${SEARCH_EP}${randomTerm}&media=music&limit=12`);
-          const data = await response.json();
-          renderTracksTable(data.results, 'list-discovery');
-        } catch (e) {
-          targetContainer.innerHTML = '<div class="error-message">Failed to load Discovery feed.</div>';
-        }
-      }
-
-      // Shared Tracks Table View Render Block Engine
-      function renderTracksTable(tracksArray, elementId) {
-        const container = document.getElementById(elementId);
-        if(!container) return;
-        
-        if (tracksArray.length === 0) {
-          container.innerHTML = `
-            <div class="track-row" style="cursor: default; opacity: 0.5;">
-              <div class="track-index">-</div>
-              <div class="result-info">
-                <div class="result-title">No music entries found here</div>
-                <div class="result-artist">Discover or search tracks to fill up this view.</div>
-              </div>
-            </div>`;
-          return;
-        }
-
-        container.innerHTML = '';
-        tracksArray.forEach((item, index) => {
-          if (!item.trackName || !item.artistName) return;
+        queueTracks.forEach((item, index) => {
           const row = document.createElement('div');
           row.className = 'track-row';
           row.innerHTML = `
@@ -829,30 +679,23 @@
             </div>
           `;
           row.addEventListener('click', () => {
-            playSong(item);
+            playSong(item.trackName, item.artistName, item.artworkUrl100);
           });
-          container.appendChild(row);
+          trackQueueList.appendChild(row);
         });
       }
 
-      // Playback System Operations Engine Control
-      function playSong(track) {
-        currentPlayingTrack = track;
-        trackTitle.textContent = track.trackName; 
-        artistName.textContent = track.artistName;
-        albumCover.src = track.artworkUrl100.replace('100x100', '400x400');
+      function showSearchResults() { searchResults.classList.add('active'); }
+      function hideSearchResults() { searchResults.classList.remove('active'); }
+
+      function playSong(title, artist, artwork) {
+        trackTitle.textContent = title; artistName.textContent = artist;
+        albumCover.src = artwork.replace('100x100', '400x400');
         albumCover.style.display = 'block'; musicIcon.style.display = 'none';
         
-        localStorage.setItem('lastPlayed', JSON.stringify({
-          title: track.trackName, artist: track.artistName, artwork: track.artworkUrl100
-        }));
-        
-        // Sync Heart Indicator Visuals State
-        const isCurrentlyLiked = likedTracks.some(t => t.trackName === track.trackName && t.artistName === track.artistName);
-        likeActionBtn.className = isCurrentlyLiked ? 'ri-heart-fill liked' : 'ri-heart-line';
-        
+        localStorage.setItem('lastPlayed', JSON.stringify({ title, artist, artwork }));
         isPlaying = false; playPauseBtn.className = 'ri-play-fill';
-        getYT(`${track.trackName} ${track.artistName}`);
+        getYT(`${title} ${artist}`);
       }
 
       function getYT(query) {
@@ -870,36 +713,6 @@
         }
       }
 
-      // Playlist Storage & Likes Array Push Save Controls Logic
-      likeActionBtn.addEventListener('click', () => {
-        if(!currentPlayingTrack) return;
-        const index = likedTracks.findIndex(t => t.trackName === currentPlayingTrack.trackName && t.artistName === currentPlayingTrack.artistName);
-        
-        if(index > -1) {
-          likedTracks.splice(index, 1);
-          likeActionBtn.className = 'ri-heart-line';
-        } else {
-          likedTracks.unshift(currentPlayingTrack);
-          likeActionBtn.className = 'ri-heart-fill liked';
-        }
-        localStorage.setItem('pond-liked-tracks', JSON.stringify(likedTracks));
-        renderTracksTable(likedTracks, 'list-liked');
-      });
-
-      btnAddToPlaylist.addEventListener('click', () => {
-        if(!currentPlayingTrack) {
-          alert('Play a song first before adding it to your playlist!');
-          return;
-        }
-        const alreadyExists = playlistTracks.some(t => t.trackName === currentPlayingTrack.trackName && t.artistName === currentPlayingTrack.artistName);
-        if(!alreadyExists) {
-          playlistTracks.push(currentPlayingTrack);
-          localStorage.setItem('pond-playlist-tracks', JSON.stringify(playlistTracks));
-          renderTracksTable(playlistTracks, 'list-playlist');
-        }
-      });
-
-      // Progress bar timelines configurations
       function updateProgress() {
         if (!player || !playerReady || isDragging) return;
         const current = player.getCurrentTime() || 0;
@@ -933,11 +746,6 @@
 
       window.addEventListener('DOMContentLoaded', () => {
         initPlayer();
-        
-        // Populate initial local records tables metrics
-        renderTracksTable(playlistTracks, 'list-playlist');
-        renderTracksTable(likedTracks, 'list-liked');
-
         document.querySelector('#backward10')?.addEventListener('click', () => player.seekTo(player.getCurrentTime() - 10));
         document.querySelector('#backward5')?.addEventListener('click', () => player.seekTo(player.getCurrentTime() - 5));
         document.querySelector('#forward5')?.addEventListener('click', () => player.seekTo(player.getCurrentTime() + 5));
@@ -945,9 +753,10 @@
         
         document.querySelector('#loopToggle').addEventListener('click', () => {
           isLooping = !isLooping;
-          document.querySelector('#loopToggle').className = isLooping ? 'ri-repeat-one-line active-state' : 'ri-repeat-line';
+          document.querySelector('#loopToggle').className = isLooping ? 'ri-repeat-one-line active-loop' : 'ri-repeat-line';
         });
 
+        // Close dropdown when clicking outside search area
         document.addEventListener('click', (e) => {
           if (!e.target.closest('.search-wrapper')) hideSearchResults();
         });
