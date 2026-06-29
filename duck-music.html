@@ -256,7 +256,7 @@
         justify-content: center;
       }
 
-      .like-btn-container i {
+      .like-btn-container i, .player-like-btn i {
         font-size: 18px;
         color: var(--menu-btn-text, #3c4043);
         opacity: 0.6;
@@ -264,12 +264,12 @@
         transition: transform 0.2s ease, color 0.2s ease;
       }
 
-      .like-btn-container i:hover {
+      .like-btn-container i:hover, .player-like-btn i:hover {
         transform: scale(1.15);
         opacity: 1;
       }
 
-      .like-btn-container i.ri-heart-fill {
+      .like-btn-container i.ri-heart-fill, .player-like-btn i.ri-heart-fill {
         color: #ef4444;
         opacity: 1;
       }
@@ -294,7 +294,7 @@
         align-items: center;
         gap: 14px;
         width: 30%;
-        min-width: 180px;
+        min-width: 220px;
       }
 
       .album-art {
@@ -324,6 +324,7 @@
 
       .track-metadata {
         min-width: 0;
+        flex: 1;
       }
 
       .track-title {
@@ -343,6 +344,14 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      .player-like-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 4px;
+        flex-shrink: 0;
       }
 
       .player-controls-group {
@@ -522,6 +531,9 @@
           <div class="track-title" id="trackTitle">Not Playing</div>
           <div class="artist" id="artistName">Choose an audio track</div>
         </div>
+        <div class="player-like-btn">
+          <i class="ri-heart-line" id="playerHeartIcon" title="Like Track"></i>
+        </div>
       </div>
 
       <div class="player-controls-group">
@@ -589,6 +601,7 @@
       const progressBar = document.querySelector('#progress');
       const currentTimeSpan = document.querySelector('#currentTime');
       const remainingTimeSpan = document.querySelector('#remainingTime');
+      const playerHeartIcon = document.querySelector('#playerHeartIcon');
 
       const deckNav = document.querySelector('#deckNav');
       const likedNav = document.querySelector('#likedNav');
@@ -604,6 +617,7 @@
       let currentView = 'deck';
       let trendingTracks = [];
       let likedTracks = JSON.parse(localStorage.getItem('likedTracks')) || [];
+      let currentTrackObj = null;
 
       async function loadYouTubeAPI() {
         return new Promise((resolve, reject) => {
@@ -737,16 +751,38 @@
         const index = likedTracks.findIndex(t => t.trackName === track.trackName && t.artistName === track.artistName);
         if (index > -1) {
           likedTracks.splice(index, 1);
-          heartElement.className = 'ri-heart-line';
-          if(currentView === 'liked') {
-            renderTracks(likedTracks);
-          }
+          if (heartElement) heartElement.className = 'ri-heart-line';
         } else {
           likedTracks.push(track);
-          heartElement.className = 'ri-heart-fill';
+          if (heartElement) heartElement.className = 'ri-heart-fill';
         }
         localStorage.setItem('likedTracks', JSON.stringify(likedTracks));
+
+        // Synchronize player bar icon color instantly if it's the currently active track
+        updatePlayerHeartStatus();
+
+        // Refresh views to stay up to date
+        if(currentView === 'liked') {
+          renderTracks(likedTracks);
+        } else if (currentView === 'deck') {
+          renderTracks(trendingTracks);
+        }
       }
+
+      function updatePlayerHeartStatus() {
+        if (!currentTrackObj) {
+          playerHeartIcon.className = 'ri-heart-line';
+          return;
+        }
+        const isCurrentLiked = likedTracks.some(t => t.trackName === currentTrackObj.trackName && t.artistName === currentTrackObj.artistName);
+        playerHeartIcon.className = isCurrentLiked ? 'ri-heart-fill' : 'ri-heart-line';
+      }
+
+      // Handle interactions with the persistent bar's like button
+      playerHeartIcon.addEventListener('click', () => {
+        if (!currentTrackObj) return; // Ignore clicks if nothing is playing
+        toggleLikeTrack(currentTrackObj, playerHeartIcon);
+      });
 
       searchInput.addEventListener('input', function () {
         clearTimeout(searchTimeout);
@@ -789,6 +825,10 @@
         trackTitle.textContent = title; artistName.textContent = artist;
         albumCover.src = artwork.replace('100x100', '400x400');
         albumCover.style.display = 'block'; musicIcon.style.display = 'none';
+        
+        // Cache object details for global synchronization updates
+        currentTrackObj = { trackName: title, artistName: artist, artworkUrl100: artwork };
+        updatePlayerHeartStatus();
         
         localStorage.setItem('lastPlayed', JSON.stringify({ title, artist, artwork }));
         isPlaying = false; playPauseBtn.className = 'ri-play-fill';
